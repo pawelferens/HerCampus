@@ -559,7 +559,6 @@
         [self.articlesTableView setFrame:CGRectMake(articlesTableView.frame.origin.x, articlesTableView.frame.origin.y, articlesTableView.frame.size.width, self.view.frame.size.height-50-60)];
         [advView setFrame:CGRectMake(advView.frame.origin.x, self.view.frame.size.height-50, advView.frame.size.width, advView.frame.size.height)];
         
-        
 //        [bannerView_ removeFromSuperview];
         
         
