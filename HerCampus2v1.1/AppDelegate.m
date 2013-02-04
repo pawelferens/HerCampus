@@ -7,12 +7,18 @@
 //
 
 #import "AppDelegate.h"
-
+#define kBgQueue dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)
 @implementation AppDelegate
-
+@synthesize IAD;
 - (BOOL)application:(UIApplication *)application didFinishLaunchingWithOptions:(NSDictionary *)launchOptions
 {
     // Override point for customization after application launch.
+    IAD=[[ADBannerView alloc]init];
+    IAD.delegate=self;
+    [[UIApplication sharedApplication]setStatusBarStyle:UIStatusBarStyleBlackOpaque];
+    
+    [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
+     (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     return YES;
 }
 							
@@ -42,5 +48,55 @@
 {
     // Called when the application is about to terminate. Save data if appropriate. See also applicationDidEnterBackground:.
 }
+-(void)bannerView:(ADBannerView *)banner didFailToReceiveAdWithError:(NSError *)error{
+    
+}
+-(void)bannerViewDidLoadAd:(ADBannerView *)banner{
+    NSLog(@"loaded ad");
+    
+}
 
+- (void)application:(UIApplication*)application didRegisterForRemoteNotificationsWithDeviceToken:(NSData*)deviceToken
+{
+   
+    
+	NSLog(@"My token is: %@", deviceToken);
+    NSString*final=[NSString stringWithFormat:@"http://cryptic-bastion-2421.herokuapp.com/addDevice.php?token=a1b2c3&id=%@",deviceToken];
+    NSURL*url=[NSURL URLWithString:final];
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
+    [request setHTTPMethod:@"GET"];
+    NSLog(@"size of Object: %zd",[request description]);
+    [[NSURLConnection alloc]initWithRequest:request delegate:self];
+    
+
+    
+}
+
+- (void)application:(UIApplication*)application didFailToRegisterForRemoteNotificationsWithError:(NSError*)error
+{
+    
+    
+}
+- (void)connectionDidFinishLoading:(NSURLConnection *)connection
+{
+    // data has the full response
+    NSLog(@"response");
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveResponse:(NSURLResponse *)response
+{
+    //  contentLength = [response expectedContentLength];
+    NSLog(@"response");
+}
+
+- (void)connection:(NSURLConnection *)connection didReceiveData:(NSData *)newdata
+{
+    // [data appendData:newdata];
+    NSLog(@"response");
+}
+
+-(void)connection:(NSURLConnection *)connection didFailWithError:(NSError *)error
+{
+    NSLog(@"%@",error);
+}
 @end

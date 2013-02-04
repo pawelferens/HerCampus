@@ -7,9 +7,9 @@
 //
 
 #import <UIKit/UIKit.h>
-
-@interface AppDelegate : UIResponder <UIApplicationDelegate>
+#import <iAd/iAd.h>
+@interface AppDelegate : UIResponder <UIApplicationDelegate,ADBannerViewDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
-
+@property(nonatomic,retain)ADBannerView*IAD;
 @end
