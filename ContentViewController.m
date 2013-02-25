@@ -49,22 +49,9 @@
      name:notificationnName
      object:nil];
     
-    
-   // bannerView_ = [[GADBannerView alloc] initWithAdSize:kGADAdSizeBanner];
-    
-    // Specify the ad's "unit identifier." This is your AdMob Publisher ID.
-   // bannerView_.adUnitID = @"a151068fe6eaa69";                                     //banner id from website
-    
-    // Let the runtime know which UIViewController to restore after taking
-   // // the user wherever the ad goes and add it to the view hierarchy.
-  //  bannerView_.rootViewController = self;
-    
-  //  [self.secondAdvView addSubview:bannerView_];
-  //  [bannerView_ loadRequest:[GADRequest request]];
-    
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(share:) name:@"share" object:nil];
     
-    
+   
     self.sectionNameLabel.text=@"";
     screenWidth=self.view.frame.size.width;
     screenHeigth=self.view.frame.size.height;
@@ -72,9 +59,10 @@
     contentScrollView.delegate=self;
     
      UIFont* font= [UIFont fontWithName:@"OpenSans-Bold" size:12];
+    UIFont* font2= [UIFont fontWithName:@"Jockey One" size:12];
     self.sectionNameLabel.font=font;
-    self.goToNextArticle.titleLabel.font=font;
-    self.goToPreviousArticle.titleLabel.font=font;
+    self.goToNextArticle.titleLabel.font=font2;
+    self.goToPreviousArticle.titleLabel.font=font2;
 
 }
 
@@ -95,28 +83,34 @@
     if([man.type isEqualToString:@"APPLE_I_ADDS\n"])
     {
         
- [contentScrollView setScrollEnabled:false];
+        [contentScrollView setScrollEnabled:false];
         
         NSLog(@" >> RRR >>");
-        //        [bannerView_ removeFromSuperview];
-        //        [adBannerView removeFromSuperview];
         
         bannerView_.alpha=0;
         // [self createAdBannerView];
-        
         adBannerView=[[self appdelegate]IAD];
         [adBannerView setFrame:CGRectMake(0, screenHeigth-50, 320, 50)];
         adBannerView.requiredContentSizeIdentifiers = [NSSet setWithObjects:ADBannerContentSizeIdentifierPortrait, ADBannerContentSizeIdentifierLandscape, nil];
         [self.view addSubview:adBannerView];
         
         adBannerView.alpha=1;
-       // [loadingView setFrame:articlesTableView.frame];
+        
+        
+        [self.contentScrollView setFrame:CGRectMake(contentScrollView.frame.origin.x, contentScrollView.frame.origin.y, contentScrollView.frame.size.width, self.view.frame.size.height-60-50-20)];
+        for(int i=0;i<[[contentScrollView subviews]count ];i++)
+        {
+            UIWebView* tt=[[contentScrollView subviews]objectAtIndex:i];
+            [tt setFrame:CGRectMake(tt.frame.origin.x, tt.frame.origin.y, tt.frame.size.width, contentScrollView.frame.size.height)];
+            
+        }
+       
     }
     else if([man.type isEqualToString:@"AD_MOB\n"])
     {
         
         adBannerView.alpha=0;
-        [self.contentScrollView setFrame:CGRectMake(contentScrollView.frame.origin.x, contentScrollView.frame.origin.y, contentScrollView.frame.size.width, self.view.frame.size.height-60-50-23)];
+        [self.contentScrollView setFrame:CGRectMake(contentScrollView.frame.origin.x, contentScrollView.frame.origin.y, contentScrollView.frame.size.width, self.view.frame.size.height-60-50-22)];
         [secondAdvView setFrame:CGRectMake(secondAdvView.frame.origin.x, self.view.frame.size.height-50, secondAdvView.frame.size.width, secondAdvView.frame.size.height)];
         [contentScrollView setScrollEnabled:false];
         for(int i=0;i<[[contentScrollView subviews]count ];i++)
@@ -126,15 +120,12 @@
             
         }
         
-        //        [bannerView_ removeFromSuperview];
-        
-        
-        //        [adBannerView removeFromSuperview];
+      
         bannerView_ = [[DFPBannerView alloc] initWithAdSize:kGADAdSizeBanner];
         
         bannerView_.alpha=1;
         // Specify the ad's "unit identifier." This is your AdMob Publisher ID.
-        bannerView_.adUnitID = @"a151068fe6eaa69";                                     //banner id from website
+        bannerView_.adUnitID = @"a151101590214be";                                     //banner id from website
         
         // Let the runtime know which UIViewController to restore after taking
         // the user wherever the ad goes and add it to the view hierarchy.
@@ -152,13 +143,13 @@
      //   [secondAdvView removeFromSuperview];
          [secondAdvView setFrame:CGRectMake(secondAdvView.frame.origin.x, self.view.frame.size.height, secondAdvView.frame.size.width, secondAdvView.frame.size.height)];
     
-      [self.contentScrollView setFrame:CGRectMake(contentScrollView.frame.origin.x, contentScrollView.frame.origin.y, contentScrollView.frame.size.width, self.view.frame.size.height-60)];
+      [self.contentScrollView setFrame:CGRectMake(contentScrollView.frame.origin.x, contentScrollView.frame.origin.y, contentScrollView.frame.size.width, self.view.frame.size.height-60-23)];
 
         
         for(int i=0;i<[[contentScrollView subviews]count ];i++)
         {
             UIWebView* tt=[[contentScrollView subviews]objectAtIndex:i];
-            [tt setFrame:CGRectMake(tt.frame.origin.x, tt.frame.origin.y, tt.frame.size.width, tt.frame.size.height+50)];
+            [tt setFrame:CGRectMake(tt.frame.origin.x, tt.frame.origin.y, tt.frame.size.width, contentScrollView.frame.size.height)];
             
         }
         
@@ -168,27 +159,25 @@
     }
     else
     {
+         [contentScrollView setScrollEnabled:false];
      //   secondAdvView.backgroundColor=[UIColor blackColor];
         adBannerView.alpha=0;
         bannerView_.alpha=0;
         anotherAdvTypeLabel.text=man.type;
-        [self.contentScrollView setFrame:CGRectMake(contentScrollView.frame.origin.x, contentScrollView.frame.origin.y, contentScrollView.frame.size.width, self.view.frame.size.height-60-50)];
+        [self.contentScrollView setFrame:CGRectMake(contentScrollView.frame.origin.x, contentScrollView.frame.origin.y, contentScrollView.frame.size.width, self.view.frame.size.height-60-50-22)];
+        for(int i=0;i<[[contentScrollView subviews]count ];i++)
+        {
+            UIWebView* tt=[[contentScrollView subviews]objectAtIndex:i];
+            [tt setFrame:CGRectMake(tt.frame.origin.x, tt.frame.origin.y, tt.frame.size.width, contentScrollView.frame.size.height)];
+            
+        }
         [secondAdvView setFrame:CGRectMake(secondAdvView.frame.origin.x, self.view.frame.size.height-50, secondAdvView.frame.size.width, secondAdvView.frame.size.height)];
         
        // [loadingView setFrame:articlesTableView.frame];
     }
 }
 
-- (void) createAdBannerView
-{
-    adBannerView = [[ADBannerView alloc] initWithFrame:CGRectZero];
-    CGRect bannerFrame = self.adBannerView.frame;
-    bannerFrame.origin.y = self.view.frame.size.height;
-    self.adBannerView.frame = bannerFrame;
-    
-    self.adBannerView.delegate = self;
-    self.adBannerView.requiredContentSizeIdentifiers = [NSSet setWithObjects:ADBannerContentSizeIdentifierPortrait, ADBannerContentSizeIdentifierLandscape, nil];
-}
+
 - (void)viewDidUnload {
     [self setContentScrollView:nil];
     [self setSectionNameLabel:nil];
@@ -253,16 +242,23 @@
     [secondAdvView setFrame:CGRectMake(secondAdvView.frame.origin.x, self.view.frame.size.height, secondAdvView.frame.size.width, secondAdvView.frame.size.height)];
     [self.contentScrollView setFrame:CGRectMake(contentScrollView.frame.origin.x, contentScrollView.frame.origin.y, contentScrollView.frame.size.width, self.view.frame.size.height-83)];
     [self.contentScrollView setShowsHorizontalScrollIndicator:NO];
-    
+    UIFont* font2= [UIFont fontWithName:@"Jockey One" size:14];
     self.sectionNameLabel.text=self.selectedSectionName;
-    contentScrollView.contentSize=CGSizeMake(screenWidth*[articlesWebViews count], contentScrollView.frame.size.height);
+    self.sectionNameLabel.font=font2;
+    contentScrollView.contentSize=CGSizeMake(screenWidth*[articles count], contentScrollView.frame.size.height);
     
     for(int i=0;i<[articles count];i++)
     {
         UIWebView* tt=[[UIWebView alloc]initWithFrame:CGRectMake(i*screenWidth, 0, screenWidth, contentScrollView.frame.size.height)];
+      
         Article*g=[articles objectAtIndex:i];
         NSLog(@"%d",[g.sections count]);
-        NSString*tymcz=[g.sections objectAtIndex:0];
+        NSString*tymcz;
+        if([g.sections count]>0)
+        {
+          tymcz=[g.sections objectAtIndex:0];  
+        }
+        
         if (tymcz) {
             tymcz=[self getSectionNameWithId:tymcz];
         }
@@ -271,6 +267,7 @@
             tymcz=selectedSectionName;
         }
         NSString* s=[[NSString alloc]initWithFormat:@"<b>%@</b><br><br>By <font color=#808080>%@</font> in<font color=#FF1493> %@ </font><br><font color=#808080><font size=2>Posted %@</font></font><br><br>%@",g.title,g.author,tymcz,g.pub_date,g.text ];
+        
         [tt loadHTMLString:s baseURL:nil];
         [contentScrollView addSubview:tt];
     }
@@ -297,7 +294,10 @@
             return @"CAREER";
             break;
         case 182151392:
-            return @"HIGHSCHOOL";
+            return @"HIGH SCHOOL";
+            break;
+        case 278711104:
+            return @"STYLE";
             break;
             
             
@@ -330,7 +330,7 @@
             
         }
         
-        else if ([scrollView contentOffset].x >= screenWidth*([articlesWebViews count]-1))
+        else if ([scrollView contentOffset].x >= screenWidth*([articles count]-1))
         {
             [self.goToNextArticle setHidden:TRUE];
             [self.rA setHidden:TRUE];
@@ -398,7 +398,7 @@
     else if (buttonIndex==3)
     {
         UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@""
-                                                        message:@"Facebook is not supperted "
+                                                        message:@"Facebook is not supported "
                                                        delegate:nil
                                               cancelButtonTitle:@"OK"
                                               otherButtonTitles:nil];
@@ -437,11 +437,11 @@
 {
     int temp=[contentScrollView contentOffset].x/screenWidth;
     NSLog(@"%d",temp);
-    if(NSClassFromString(@"UIActivityViewController")) {
+    if(NSClassFromString(@"UIActivityViewController")) {        //checking if native sharing is avaible
         
-        Article* t=[articles objectAtIndex:temp];
-        NSString* someText = t.link;
-        NSArray* dataToShare = @[someText];  // ...or whatever pieces of data you want to share.
+        Article* showedArticle=[articles objectAtIndex:temp];
+        NSString* someText = showedArticle.link;
+        NSArray* dataToShare = @[someText];  // ... pieces of data you want to share.
         
         UIActivityViewController* activityViewController =
         [[UIActivityViewController alloc] initWithActivityItems:dataToShare
@@ -534,5 +534,7 @@
     }
     
 }
+
+
 
 @end

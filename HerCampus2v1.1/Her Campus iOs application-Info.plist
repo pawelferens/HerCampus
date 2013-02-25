@@ -20,11 +20,11 @@
 		</dict>
 	</dict>
 	<key>CFBundleIdentifier</key>
-	<string>velia-systems.${PRODUCT_NAME:rfc1034identifier}</string>
+	<string>velia-systems.Her-Campus-iOS-application</string>
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>${PRODUCT_NAME}</string>
+	<string>Her Campus iOs application</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -32,7 +32,7 @@
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>2.99</string>
+	<string>3.01</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>UIAppFonts</key>

@@ -7,6 +7,7 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "AppDelegate.h"
 
 @interface AdvertisementManager : NSObject
 @property (nonatomic,retain)NSString* type;

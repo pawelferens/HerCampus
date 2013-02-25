@@ -55,6 +55,7 @@
       
         [adBannerView setFrame:CGRectMake(0, screenHeigth -50, 320, 50)];
         adBannerView.requiredContentSizeIdentifiers = [NSSet setWithObjects:ADBannerContentSizeIdentifierPortrait, ADBannerContentSizeIdentifierLandscape, nil];
+        [webView setFrame:CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, self.view.frame.size.height-123)];
         [self.view addSubview:adBannerView];
         
         adBannerView.alpha=1;
@@ -67,7 +68,7 @@
         adBannerView.alpha=0;
         bannerView_.alpha=1;
         // Specify the ad's "unit identifier." This is your AdMob Publisher ID.
-        bannerView_.adUnitID = @"a151068fe6eaa69";                                     //banner id from website
+        bannerView_.adUnitID = @"a151101590214be";                                     //banner id from website
         
         // Let the runtime know which UIViewController to restore after taking
         // the user wherever the ad goes and add it to the view hierarchy.
@@ -209,6 +210,7 @@
     
 }
 
+
 -(NSString*)getSectionNameWithId:(NSString*)idOfSection
 {
     int t=[idOfSection intValue];
@@ -231,7 +233,9 @@
         case 182151392:
             return @"HIGHSCHOOL";
             break;
-            
+        case 278711104:
+            return @"STYLE";
+            break;
             
         default:
         return @"ALL";    }

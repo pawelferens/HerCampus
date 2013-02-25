@@ -14,19 +14,28 @@
 {
     NSString* urlString=[NSString stringWithFormat:@"http://hercampuscme.appspot.com/getInfo?token=a1b2c3"];
     dispatch_async(kBgQueue, ^{
-        NSData* data = [NSData dataWithContentsOfURL:
+        NSData* data = nil;
+        if([[self appdelegate]checkNetworkStatus]){
+            data = [NSData dataWithContentsOfURL:
                         [NSURL URLWithString:urlString]];
-        [self performSelectorOnMainThread:@selector(dataToString:)
-                               withObject:data waitUntilDone:NO];
+            [self performSelectorOnMainThread:@selector(dataToString:)
+                                   withObject:data waitUntilDone:NO];
+        }
+        else{
+            type = @"NOADS";
+        }
+
     });
     
     
 }
--(void)dataToString:(id)data
+-(void)dataToString:(NSData*)data
 {
-   type = [[NSString alloc] initWithData:data
-                                              encoding:NSUTF8StringEncoding];
-    
+    if(data !=nil)
+        type = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    else
+        type = @"NOADS";
+        
     NSLog(@"%@--",self.type);
     [self postNotification];
 }
@@ -34,5 +43,8 @@
 {
     NSString *notificationName = @"TypeRefreshed";
     [[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:nil ];
+}
+- (AppDelegate *) appdelegate {
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
 }
 @end

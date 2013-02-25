@@ -8,6 +8,9 @@
 
 #import <Foundation/Foundation.h>
 
-@interface Section : NSObject
-
+@interface Section : NSObject<NSCoding>
+@property (nonatomic,retain)NSString* sectionName;
+@property (nonatomic,retain)NSString* sectionNumber;
+@property(nonatomic,retain)NSString* orderNumber;
 @end
+

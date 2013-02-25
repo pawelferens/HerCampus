@@ -365,30 +365,30 @@
     NSString * sectionName;
     if(founded==0 && foundedInContent==0)
     {
-         sectionName=@"Search results";
+         sectionName=@"SEARCH RESULTS";
     }
     else if(founded!=0 &&foundedInContent!=0 )
     {
        if(section==0)
        {
-            sectionName=@"Search in title results";
+            sectionName=@"SEARCH IN TITLE RESULTS";
        }
         else
         {
-            sectionName=@"Search in content results";
+            sectionName=@"SEARCH IN CONTENT RESULTS";
         }
     }
     else if(founded==0 &&foundedInContent!=0 )
     {
-         sectionName=@"Search in content results";
+         sectionName=@"SEARCH IN CONTENT RESULTS";
     }
     else if(founded!=0 &&foundedInContent==0 )
     {
-         sectionName=@"Search results";
+         sectionName=@"SEARCH RESULTS";
     }
     else
     {
-       sectionName=@"Search results";
+       sectionName=@"SEARCH RESULTS";
     }
     
   
