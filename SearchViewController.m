@@ -29,6 +29,29 @@
     }
     return self;
 }
+
+-(void)viewDidLoad{
+    //cont=[[SearchResultViewController alloc]init];
+    
+    cont=[self.storyboard instantiateViewControllerWithIdentifier:@"searchResultWindow"];
+    
+    if([[self appdelegate].deviceType isEqualToString:@"iPhone"] || [[self appdelegate].deviceType isEqualToString:@"iPhone Simulator"]){
+      //  screenWidth=self.view.frame.size.width;
+    }
+    else if([[self appdelegate].deviceType isEqualToString:@"iPad"] || [[self appdelegate].deviceType isEqualToString:@"iPad Simulator"]){
+       // screenWidth=self.view.frame.size.height;
+        [self addChildViewController:cont];
+        [cont.view setFrame:CGRectMake(myTableView.frame.size.width, 60, 768, 704)];
+        [self.view addSubview:cont.view];
+        
+    }
+}
+
+-(void) viewWillAppear:(BOOL)animated{
+    NSArray *newVCs = [NSArray arrayWithObjects:[self.splitViewController.viewControllers objectAtIndex:0], cont, nil];
+    self.splitViewController.viewControllers = newVCs;
+}
+
 -(void)searchCompleted:(id)notification
 {
     founded=0;
@@ -260,14 +283,18 @@
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
     self.searchedText=searchText;
-  
-
-    
 }
+
+
+- (AppDelegate *) appdelegate {
+    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
+}
+
+
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    cont=[[SearchResultViewController alloc]init];
+   
    // cont=[self.storyboard instantiateViewControllerWithIdentifier:@"searchResultWindow"];
     Article*t;
     if(indexPath.section==0)
@@ -283,7 +310,15 @@
     cont.contentText=t.text;
     cont.articleA=t;
     
-    [self.navigationController pushViewController:cont animated:TRUE];
+    if([[self appdelegate].deviceType isEqualToString:@"iPhone"] || [[self appdelegate].deviceType isEqualToString:@"iPhone Simulator"]){
+        [self.navigationController pushViewController:cont animated:TRUE];
+    }
+    else if([[self appdelegate].deviceType isEqualToString:@"iPad"] || [[self appdelegate].deviceType isEqualToString:@"iPad Simulator"]){
+        [cont viewDidAppear:YES];
+    }
+    
+    
+    
    
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
@@ -398,6 +433,17 @@
     
     
 	return customView;
+}
+
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
+}
+
+-(BOOL)shouldAutorotate
+{
+    return YES;
 }
 
 

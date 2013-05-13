@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C9D57981737D33100323177 /* MainStoryboard_iPad.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 2C9D57971737D33100323177 /* MainStoryboard_iPad.storyboard */; };
 		E518C35416B2A6BD00F25F50 /* jockeyoneregular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E518C35316B2A6BD00F25F50 /* jockeyoneregular.ttf */; };
 		E518C35616B2AA5600F25F50 /* OpenSans-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E518C35516B2AA5600F25F50 /* OpenSans-Bold.ttf */; };
 		E56E6BC816C8F05F0081AF9A /* Reachability.m in Sources */ = {isa = PBXBuildFile; fileRef = E56E6BC516C8F05F0081AF9A /* Reachability.m */; settings = {COMPILER_FLAGS = "-fno-objc-arc"; }; };
@@ -42,7 +43,7 @@
 		E5FB1DF716AD611200952A2F /* Default.png in Resources */ = {isa = PBXBuildFile; fileRef = E5FB1DF616AD611200952A2F /* Default.png */; };
 		E5FB1DF916AD611300952A2F /* Default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5FB1DF816AD611300952A2F /* Default@2x.png */; };
 		E5FB1DFB16AD611300952A2F /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = E5FB1DFA16AD611300952A2F /* Default-568h@2x.png */; };
-		E5FB1DFE16AD611300952A2F /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5FB1DFC16AD611300952A2F /* MainStoryboard.storyboard */; };
+		E5FB1DFE16AD611300952A2F /* MainStoryboard_iPhone.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = E5FB1DFC16AD611300952A2F /* MainStoryboard_iPhone.storyboard */; };
 		E5FB1E0116AD611300952A2F /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = E5FB1E0016AD611300952A2F /* ViewController.m */; };
 		E5FB1E2116AD625A00952A2F /* MessageUI.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E5FB1E2016AD625A00952A2F /* MessageUI.framework */; };
 		E5FB1E3F16AD63BC00952A2F /* gradient_border.png in Resources */ = {isa = PBXBuildFile; fileRef = E5FB1E2316AD63BC00952A2F /* gradient_border.png */; };
@@ -84,6 +85,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2C9D57971737D33100323177 /* MainStoryboard_iPad.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = MainStoryboard_iPad.storyboard; sourceTree = "<group>"; };
 		E518C35316B2A6BD00F25F50 /* jockeyoneregular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = jockeyoneregular.ttf; sourceTree = "<group>"; };
 		E518C35516B2AA5600F25F50 /* OpenSans-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "OpenSans-Bold.ttf"; sourceTree = "<group>"; };
 		E56E6BC416C8F05F0081AF9A /* Reachability.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Reachability.h; path = ../Reachability.h; sourceTree = "<group>"; };
@@ -135,7 +137,7 @@
 		E5FB1DF616AD611200952A2F /* Default.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Default.png; sourceTree = "<group>"; };
 		E5FB1DF816AD611300952A2F /* Default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default@2x.png"; sourceTree = "<group>"; };
 		E5FB1DFA16AD611300952A2F /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
-		E5FB1DFD16AD611300952A2F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		E5FB1DFD16AD611300952A2F /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard_iPhone.storyboard; sourceTree = "<group>"; };
 		E5FB1DFF16AD611300952A2F /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ViewController.h; path = HerCampus2v1.1/ViewController.h; sourceTree = "<group>"; };
 		E5FB1E0016AD611300952A2F /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; name = ViewController.m; path = HerCampus2v1.1/ViewController.m; sourceTree = "<group>"; };
 		E5FB1E0816AD618500952A2F /* ServerConnectionManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServerConnectionManager.h; sourceTree = "<group>"; };
@@ -283,7 +285,8 @@
 				E5FB1E0716AD616B00952A2F /* Connection */,
 				E5FB1DF316AD611200952A2F /* AppDelegate.h */,
 				E5FB1DF416AD611200952A2F /* AppDelegate.m */,
-				E5FB1DFC16AD611300952A2F /* MainStoryboard.storyboard */,
+				E5FB1DFC16AD611300952A2F /* MainStoryboard_iPhone.storyboard */,
+				2C9D57971737D33100323177 /* MainStoryboard_iPad.storyboard */,
 				E5FB1DEB16AD611200952A2F /* Supporting Files */,
 			);
 			path = HerCampus2v1.1;
@@ -459,7 +462,7 @@
 				E5FB1DF716AD611200952A2F /* Default.png in Resources */,
 				E5FB1DF916AD611300952A2F /* Default@2x.png in Resources */,
 				E5FB1DFB16AD611300952A2F /* Default-568h@2x.png in Resources */,
-				E5FB1DFE16AD611300952A2F /* MainStoryboard.storyboard in Resources */,
+				E5FB1DFE16AD611300952A2F /* MainStoryboard_iPhone.storyboard in Resources */,
 				E5FB1E3F16AD63BC00952A2F /* gradient_border.png in Resources */,
 				E5FB1E4016AD63BC00952A2F /* twitter2.png in Resources */,
 				E5FB1E4116AD63BC00952A2F /* twitter.png in Resources */,
@@ -489,6 +492,7 @@
 				E518C35616B2AA5600F25F50 /* OpenSans-Bold.ttf in Resources */,
 				E5DAECFC16B6BC0400DD2491 /* README.txt in Resources */,
 				E5AB560916C3E0C100D50AC8 /* arrow.png in Resources */,
+				2C9D57981737D33100323177 /* MainStoryboard_iPad.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -542,12 +546,12 @@
 			name = InfoPlist.strings;
 			sourceTree = "<group>";
 		};
-		E5FB1DFC16AD611300952A2F /* MainStoryboard.storyboard */ = {
+		E5FB1DFC16AD611300952A2F /* MainStoryboard_iPhone.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				E5FB1DFD16AD611300952A2F /* en */,
 			);
-			name = MainStoryboard.storyboard;
+			name = MainStoryboard_iPhone.storyboard;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */
@@ -622,6 +626,7 @@
 				PRODUCT_NAME = "Her Campus iOs application";
 				PROVISIONING_PROFILE = "";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -645,6 +650,7 @@
 				PRODUCT_NAME = "Her Campus iOs application";
 				PROVISIONING_PROFILE = "562F06DE-0833-4D3C-8BC1-CBCAE4242426";
 				"PROVISIONING_PROFILE[sdk=iphoneos*]" = "562F06DE-0833-4D3C-8BC1-CBCAE4242426";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;

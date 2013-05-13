@@ -22,8 +22,10 @@
     [[UIApplication sharedApplication] registerForRemoteNotificationTypes:
      (UIRemoteNotificationTypeBadge | UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert)];
     
-   
-        
+    self.deviceType = [UIDevice currentDevice].model;
+    NSLog(@"device type = %@",self.deviceType);
+
+  
     return YES;
 }
 							

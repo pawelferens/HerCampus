@@ -8,8 +8,9 @@
 
 #import "ViewController.h"
 
-@interface ViewController ()
-
+@interface ViewController (){
+        CGRect naviBarFrame;
+}
 @end
 
 @implementation ViewController
@@ -48,6 +49,21 @@
     
     [super viewDidLoad];
     isOfflinePreview = NO;
+    contentController=[self.storyboard instantiateViewControllerWithIdentifier:@"contentView" ];
+    
+    if([[self appdelegate].deviceType isEqualToString:@"iPhone"] || [[self appdelegate].deviceType isEqualToString:@"iPhone Simulator"]){
+        screenWidth=self.view.frame.size.width;
+    }
+    else if([[self appdelegate].deviceType isEqualToString:@"iPad"] || [[self appdelegate].deviceType isEqualToString:@"iPad Simulator"]){
+        screenWidth=self.view.frame.size.height;
+        [self addChildViewController:contentController];
+        [contentController.view setFrame:CGRectMake(articlesTableView.frame.size.width, 60, 768, 704)];
+        [self.view addSubview:contentController.view];
+        
+    }
+ 
+
+    
     
     NSString *notificationName = @"DataRefreshed";
     [[NSNotificationCenter defaultCenter]
@@ -85,13 +101,18 @@
      object:nil];
     
     
+    
+   
+
     isLoading=0;
     
     managerAdv=[[AdvertisementManager alloc]init];
     manager=[[ServerConnectionManager alloc]init];
     [manager getSections];
     numberOfLoadedArticles=10;
-    screenWidth=self.view.frame.size.width;
+    
+    
+    NSLog(@"screenWidth: %d", screenWidth);
     screenHeigth=self.view.frame.size.height;
     
     loadingView=[[UIView alloc]initWithFrame:CGRectMake(articlesTableView.frame.origin.x, articlesTableView.frame.origin.y, articlesTableView.frame.size.width, articlesTableView.frame.size.height)];
@@ -101,7 +122,7 @@
     [self.view addSubview:loadingView];
     spinner = [[UIActivityIndicatorView alloc] initWithActivityIndicatorStyle:UIActivityIndicatorViewStyleWhiteLarge];
     spinner.color=[UIColor blackColor];
-    [spinner setCenter:CGPointMake(screenWidth/2, screenHeigth/2)]; // I do this because I'm in landscape mode
+    [spinner setCenter:CGPointMake(articlesTableView.frame.size.width/2, articlesTableView.frame.size.height/2)]; // I do this because I'm in landscape mode
     [spinner setHidden:true];
     [spinner startAnimating];
     [self.view addSubview:spinner];
@@ -110,24 +131,42 @@
     [self.navigationController setNavigationBarHidden:TRUE];
     self.selectedSectionName=@"ALL";
     articles=[[NSMutableArray alloc]init];
+    
 
-    arrowLeftImage=[[UIImageView alloc]initWithFrame:CGRectMake(0, 54, 8, 10)];
+    naviBarFrame.origin.x = 0;
+    naviBarFrame.origin.y = 20;
+    naviBarFrame.size.width = screenWidth;
+    naviBarFrame.size.height = 60;
+    
+
+
+    arrowLeftImage=[[UIImageView alloc]initWithFrame:CGRectMake(0, naviBarFrame.origin.y+34, 8, 10)];
     [arrowLeftImage setImage:[UIImage imageNamed:@"leftArrow.png"]];
     [self.navigationController.view addSubview:arrowLeftImage];
-    arrowRightImage=[[UIImageView alloc]initWithFrame:CGRectMake(screenWidth-10, 54, 8, 10)];
+    arrowRightImage=[[UIImageView alloc]initWithFrame:CGRectMake(screenWidth-10, naviBarFrame.origin.y+34, 8, 10)];
     [arrowRightImage setImage:[UIImage imageNamed:@"rightArrow.png"]];
     
     
     [self.navigationController.view addSubview:arrowRightImage];
     self.navigationController.navigationBar.tintColor = [UIColor blackColor];
-    UIImageView*logo=[[UIImageView alloc]initWithFrame:CGRectMake(0,20, 320, 20)];
+    
+
+
+    UIImageView*logo=[[UIImageView alloc]initWithFrame:CGRectMake(naviBarFrame.origin.x,
+                                                                  naviBarFrame.origin.y,
+                                                                  screenWidth,
+                                                                  20)];
+    
+    [logo setBackgroundColor: [UIColor colorWithRed:255.0f/255.0f green:6.0f/255.0f blue:102.0f/255.0f alpha:1]];
+
+    
     [logo setImage:[UIImage imageNamed:@"bar.png"]];
      [self.navigationController.view addSubview:logo];
     [articlesTableView setDataSource:self];
     [articlesTableView setDelegate:self];
     
     // [arrowLeftImage setAlpha:0.8f];
-    shareButton=[[UIButton alloc]initWithFrame:CGRectMake(5, 23, 19, 15)];
+    shareButton=[[UIButton alloc]initWithFrame:CGRectMake(5, naviBarFrame.origin.y+3, 19, 15)];
     [shareButton setImage:[UIImage imageNamed:@"share_icon.png"] forState:UIControlStateNormal];
     [shareButton addTarget:self action:@selector(share:) forControlEvents:UIControlEventTouchUpInside];
     [shareButton setHidden:TRUE];
@@ -165,7 +204,8 @@
     else{
         [articlesTableView setTableFooterView: nil];
     }
-
+    [self loadNewestArticles];
+    [self.view bringSubviewToFront:articlesTableView];
 }
 
 
@@ -219,7 +259,7 @@
 }
 -(void)addSearchButton
 {
-    UIButton*searchButton=[[UIButton alloc]initWithFrame:CGRectMake(screenWidth-20, 23, 14, 15)];
+    UIButton*searchButton=[[UIButton alloc]initWithFrame:CGRectMake(screenWidth-20, naviBarFrame.origin.y+3, 14, 15)];
     [searchButton setImage:[UIImage imageNamed:@"searchIcon"] forState:UIControlStateNormal];
     [searchButton addTarget:self action:@selector(goToSearchPage:) forControlEvents:UIControlEventTouchUpInside];
    
@@ -249,8 +289,14 @@
 }
 
 - (void)viewDidAppear:(BOOL)animated {
+    
     [super viewDidAppear:animated];
-    [manager getSections];
+    //[manager getSections];
+    screenWidth=self.view.frame.size.width;
+
+    NSArray *newVCs = [NSArray arrayWithObjects:[self.splitViewController.viewControllers objectAtIndex:0], contentController, nil];
+    self.splitViewController.viewControllers = newVCs;
+    
     [noContentLabel setHidden:YES];
     if(![[self appdelegate]checkNetworkStatus]  && !isOfflinePreview)
     {
@@ -264,8 +310,6 @@
         [alert show];
     }
     else if ([[self appdelegate]checkNetworkStatus]){
-        [self loadNewestArticles];
-        NSLog(@"online adview load");
         [articlesTableView setHidden:NO];
         isOfflinePreview = NO;
         [self.articlesTableView setFrame:CGRectMake(articlesTableView.frame.origin.x,
@@ -518,8 +562,7 @@
 {
        [tableView deselectRowAtIndexPath:indexPath animated:YES];
 
-    contentController=[self.storyboard instantiateViewControllerWithIdentifier:@"contentView" ];
-     contentController.articlesWebViews=[[NSMutableArray alloc]init];
+    contentController.articlesWebViews=[[NSMutableArray alloc]init];
     contentController.articles=[[NSMutableArray alloc]init];
     for(int i=0;i<[articles count];i++)
     {
@@ -544,35 +587,60 @@
     }
     
     contentController.selectedSectionName=self.selectedSectionName;
-    [self.navigationController pushViewController:contentController animated:TRUE];
+    
+    
+    if([[self appdelegate].deviceType isEqualToString:@"iPhone"] || [[self appdelegate].deviceType isEqualToString:@"iPhone Simulator"]){
+        [self.navigationController pushViewController:contentController animated:TRUE];
+    }
+    else if([[self appdelegate].deviceType isEqualToString:@"iPad"] || [[self appdelegate].deviceType isEqualToString:@"iPad Simulator"]){
+        [UIView animateWithDuration:0.5
+                              delay:0.0
+                            options: UIViewAnimationCurveEaseOut
+                         animations:^{
+                             [articlesTableView setFrame:CGRectMake(0, 60, 0, articlesTableView.frame.size.height)];
+                             [contentController.view  setFrame:CGRectMake(0, 60, self.view.frame.size.width, self.view.frame.size.height-60)];
+                         }
+                         completion:^(BOOL finished){
+                             NSLog(@"Done!");
+                         }];
+        
+        [self.contentController viewDidAppear:YES];
+    }
+    
   [self viewAnimate];
     
 }
 
 -(void)loadSectionsView
 {
-    sectionsView=[[UIScrollView alloc]initWithFrame:CGRectMake(16, 40, screenWidth-32, 40)];
+    
+    sectionsView=[[UIScrollView alloc]initWithFrame:CGRectMake(16, naviBarFrame.origin.y+20, screenWidth-32, 40)];
     sectionsView.backgroundColor=[UIColor blackColor];
-    sectionsView.contentSize = CGSizeMake(7 * 57, 40);
+    
+    
+    
     sectionsView.delegate=self;
     [sectionsView setShowsHorizontalScrollIndicator:NO];
     
     UIFont* font= [UIFont fontWithName:@"Jockey One" size:16];
- //   NSMutableArray* sections=[self loadSections];
+    //   NSMutableArray* sections=[self loadSections];
     UIButton*but;
-   
+    
     but=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 30, 40)];   //all section
     [but addTarget:self action:@selector(changeSection:) forControlEvents:UIControlEventTouchUpInside];
     [but.titleLabel setFont:font];
     [but setTitle:@"ALL" forState:UIControlStateNormal];
     but.tag=0;
     [sectionsView addSubview:but];
-     float tempIndex=30;
+    float tempIndex=30;
     for(int i=0; i<[sections count];i++)
     {
         but=[[UIButton alloc]initWithFrame:CGRectMake(tempIndex, 0, [[[sections objectAtIndex:i]sectionName]length]*10, 40)];
+        
+        sectionsView.contentSize = CGSizeMake(tempIndex+but.frame.size.width, 40);
+        
         tempIndex=tempIndex+[[[sections objectAtIndex:i]sectionName]length]*9;
-
+        
         but.tag=i+1;
         
         [but addTarget:self action:@selector(changeSection:) forControlEvents:UIControlEventTouchUpInside];
@@ -580,14 +648,15 @@
         
         [but setTitle:[[[sections objectAtIndex:i]sectionName]uppercaseString] forState:UIControlStateNormal];
         but.contentHorizontalAlignment = UIControlContentHorizontalAlignmentLeft;
-      // but.contentVerticalAlignment = UIControlContentVerticalAlignmentFill;
+        // but.contentVerticalAlignment = UIControlContentVerticalAlignmentFill;
         [sectionsView addSubview:but];
         
         
     }
     
-    [self.navigationController. view addSubview:sectionsView];
+    [self.navigationController.view addSubview:sectionsView];
 
+    
 }
 
 
@@ -626,7 +695,7 @@
 
 -(void)addInformationButton
 {
-    informationButton=[[UIButton alloc]initWithFrame:CGRectMake(5, 23, 16, 15)];
+    informationButton=[[UIButton alloc]initWithFrame:CGRectMake(5, naviBarFrame.origin.y+3, 16, 15)];
     [informationButton setImage:[UIImage imageNamed:@"info.png"] forState:UIControlStateNormal];
     [informationButton addTarget:self action:@selector(goToInfoPage:) forControlEvents:UIControlEventTouchUpInside];
     [self.navigationController.view addSubview:informationButton];
@@ -647,6 +716,7 @@
         [noContentLabel setText:@"No content to display. Please connect to internet to download articles."];
         [noContentLabel setTextAlignment:NSTextAlignmentCenter];
         [noContentLabel setBackgroundColor:[UIColor colorWithWhite:1 alpha:0]];
+        [noContentLabel setEditable:NO];
         [self.view addSubview: noContentLabel];
         [spinner setHidden:YES];
 
@@ -662,7 +732,7 @@
             }
             else{
                 [manager getArticlesFromSection:[[sections objectAtIndex:(currentSection-1)]sectionNumber] andLimit:numberOfLoadedArticles];
-                [self animateUndelineWithSectionTag:b.frame.origin.x andLength:[b.titleLabel.text length]*sections.count];
+                [self animateUndelineWithSectionTag:b.frame.origin.x andLength:[b.titleLabel.text length]*7];
             }
             [self.articlesTableView setFrame:CGRectMake(articlesTableView.frame.origin.x,
                                                         articlesTableView.frame.origin.y,
@@ -817,7 +887,7 @@
                           delay:0.0
                         options: UIViewAnimationCurveEaseOut
                      animations:^{
-                         informationButton.frame = CGRectMake(270, informationButton.frame.origin.y,
+                         informationButton.frame = CGRectMake(self.navigationController.view.frame.size.width-40, informationButton.frame.origin.y,
                                                               informationButton.frame.size.width, informationButton.frame.size.height);
                          //[informationButton setAlpha:0.0];
                      }
@@ -842,10 +912,21 @@
                      }];
 }
 
-
-
 -(IBAction)changeSection:(id)selector
 {
+    [UIView animateWithDuration:0.5
+                          delay:0.0
+                        options: UIViewAnimationCurveEaseOut
+                     animations:^{
+                            [articlesTableView setFrame:CGRectMake(0, 60, 320, articlesTableView.frame.size.height)];
+                     }
+                     completion:^(BOOL finished){
+                         NSLog(@"Done!");
+                     }];
+
+
+    
+    
     [noContentLabel setHidden:YES];
     [articlesTableView setHidden:NO];
     
@@ -857,7 +938,7 @@
     self.selectedSectionName=[b.titleLabel.text uppercaseString];
     
     [sectionsView setContentOffset:CGPointMake(b.frame.origin.x-115, 0) animated:TRUE];
-
+    
     if([[self appdelegate]checkNetworkStatus] || isOfflinePreview){
         if([[self appdelegate]checkNetworkStatus]){
             [articlesTableView setTableFooterView: footer];
@@ -869,7 +950,7 @@
         else
         {
             [manager getArticlesFromSection:[[sections objectAtIndex:(temp-1)]sectionNumber] andLimit:numberOfLoadedArticles];
-            [self animateUndelineWithSectionTag:b.frame.origin.x andLength:[b.titleLabel.text length]*sections.count];
+            [self animateUndelineWithSectionTag:b.frame.origin.x andLength:[b.titleLabel.text length]*7];
         }
         
     }
@@ -903,7 +984,7 @@
                                      advView.frame.size.height)];
         [self.view addSubview:advView];
     }
-
+    
     
     [loadingView setFrame:articlesTableView.frame];
     [managerAdv getAdvertisementType];
@@ -918,15 +999,10 @@
     spinner.hidden=FALSE;
     [spinner startAnimating];
     
- //   [self.articlesTableView setAlpha:0.08f];
-    
-
-    
-  
-    //NSLog(self.selectedSectionName);
-
-    
 }
+
+
+
 
 - (UIView *)tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section
 {
@@ -1041,5 +1117,15 @@
     }
 }
 
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
+}
+
+-(BOOL)shouldAutorotate
+{
+    return YES;
+}
 
 @end

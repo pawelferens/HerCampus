@@ -235,12 +235,19 @@
 - (void)viewDidAppear:(BOOL)animated {
     
     [super viewDidAppear:animated];
+    NSLog(@"did appear");
     // secondAdvView.backgroundColor=[UIColor whiteColor];
    man=[[AdvertisementManager alloc]init];
    
     [man getAdvertisementType];
     [secondAdvView setFrame:CGRectMake(secondAdvView.frame.origin.x, self.view.frame.size.height, secondAdvView.frame.size.width, secondAdvView.frame.size.height)];
-    [self.contentScrollView setFrame:CGRectMake(contentScrollView.frame.origin.x, contentScrollView.frame.origin.y, contentScrollView.frame.size.width, self.view.frame.size.height-83)];
+    
+    float scrollHeight=self.view.frame.size.height;
+    if([[self appdelegate].deviceType isEqualToString:@"iPhone"] || [[self appdelegate].deviceType isEqualToString:@"iPhone Simulator"]){
+        scrollHeight=self.view.frame.size.height-83;
+    }
+    
+    [self.contentScrollView setFrame:CGRectMake(contentScrollView.frame.origin.x, contentScrollView.frame.origin.y, contentScrollView.frame.size.width, scrollHeight)];
     [self.contentScrollView setShowsHorizontalScrollIndicator:NO];
     UIFont* font2= [UIFont fontWithName:@"Jockey One" size:14];
     self.sectionNameLabel.text=self.selectedSectionName;
@@ -536,5 +543,15 @@
 }
 
 
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
+}
+
+-(BOOL)shouldAutorotate
+{
+    return YES;
+}
 
 @end

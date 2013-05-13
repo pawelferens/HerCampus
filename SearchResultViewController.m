@@ -8,7 +8,9 @@
 
 #import "SearchResultViewController.h"
 
-@interface SearchResultViewController ()
+@interface SearchResultViewController (){
+    CGSize detailVCSize;
+}
 
 @end
 
@@ -146,34 +148,8 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    isInitialized = NO;
     
-    self.advPlace=[[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, 320, 50)];
-    advPlace.backgroundColor=[UIColor blackColor];
-
-    NSString *notificationnName = @"TypeRefreshed";
-    [[NSNotificationCenter defaultCenter]
-     addObserver:self
-     selector:@selector(typeRefreshed:)
-     name:notificationnName
-     object:nil];
-     screenHeigth=self.view.frame.size.height;
-   
-	// Do any additional setup after loading the view.
-    int screenHeigth=self.view.frame.size.height;
-    webView=[[UIWebView alloc]initWithFrame:CGRectMake(0, 80, 320, screenHeigth-80)];
-  //  [webView loadHTMLString:contentText baseURL:nil];
-    UIView* bar=[[UIView alloc]initWithFrame:CGRectMake(0, 60, 320, 20)];
-    UIButton* back=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 50, 20)];
-    [back setTitle:@"BACK" forState:UIControlStateNormal];
-    UIFont* font= [UIFont fontWithName:@"Jockey One" size:14];
-    back.titleLabel.font = font;
-    [back setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [back addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-    [bar addSubview:back];
-    UIColor *color=[UIColor colorWithRed:184.0f/255.0f green:183.0f/255.0f blue:183.0f/255.0f alpha:1];
-    bar.backgroundColor=color;
-    [self.view addSubview:bar];
-    [self.view addSubview:webView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -185,29 +161,78 @@
 {
     [self.navigationController popViewControllerAnimated:true];
 }
+
+
 -(void)viewDidAppear:(BOOL)animated
 {
-    NSString*t;
-    if ([articleA.sections count]>0) {
-        t=[self getSectionNameWithId:[articleA.sections objectAtIndex:0] ];
+    if (!isInitialized){
+        detailVCSize = CGSizeMake(((SearchResultViewController*)[self.splitViewController.viewControllers objectAtIndex:1]).view.frame.size.width,
+                                  ((SearchResultViewController*)[self.splitViewController.viewControllers objectAtIndex:1]).view.frame.size.height);
+        NSLog(@"test: %f -  %f",
+              ((SearchResultViewController*)[self.splitViewController.viewControllers objectAtIndex:1]).view.frame.size.width,
+              ((SearchResultViewController*)[self.splitViewController.viewControllers objectAtIndex:0]).view.frame.size.width);
+        
+        NSLog(@"detailVCSize: %f x %f", detailVCSize.width, detailVCSize.height);
+        
+        
+        self.advPlace=[[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, detailVCSize.width, 50)];
+        advPlace.backgroundColor=[UIColor blackColor];
+        
+        NSString *notificationnName = @"TypeRefreshed";
+        [[NSNotificationCenter defaultCenter]
+         addObserver:self
+         selector:@selector(typeRefreshed:)
+         name:notificationnName
+         object:nil];
+        screenHeigth=self.view.frame.size.height;
+        
+        
+        
+        int screenHeigth=self.view.frame.size.height;
+        webView=[[UIWebView alloc]initWithFrame:CGRectMake(0, 80, detailVCSize.width, screenHeigth-80)];
+        //  [webView loadHTMLString:contentText baseURL:nil];
+        UIView* bar=[[UIView alloc]initWithFrame:CGRectMake(0, 60, detailVCSize.width, 20)];
+        
+        if([[self appdelegate].deviceType isEqualToString:@"iPhone"] || [[self appdelegate].deviceType isEqualToString:@"iPhone Simulator"]){
+            UIButton* back=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 50, 20)];
+            [back setTitle:@"BACK" forState:UIControlStateNormal];
+            UIFont* font= [UIFont fontWithName:@"Jockey One" size:14];
+            back.titleLabel.font = font;
+            [back setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+            [back addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+            [bar addSubview:back];
+        }
+        
+        
+        UIColor *color=[UIColor colorWithRed:184.0f/255.0f green:183.0f/255.0f blue:183.0f/255.0f alpha:1];
+        bar.backgroundColor=color;
+        [self.view addSubview:bar];
+        [self.view addSubview:webView];
+        isInitialized = YES;
     }
-    else
-    {
-        t=@"";
+
+    if(articleA != nil){
+        NSString*t;
+        if ([articleA.sections count]>0) {
+            t=[self getSectionNameWithId:[articleA.sections objectAtIndex:0] ];
+        }
+        else
+        {
+            t=@"";
+        }
+        
+         NSString* s=[[NSString alloc]initWithFormat:@"<b>%@</b><br><br>By <font color=#808080>%@</font> in<font color=#FF1493> %@ </font><br><font color=#808080><font size=2>Posted %@</font></font><br><br>%@",articleA.title,articleA.author,t,articleA.pub_date,articleA.text ];
+         [webView loadHTMLString:s baseURL:nil];
+        
+        
+        
+        
+        man=[[AdvertisementManager alloc]init];
+        
+        [man getAdvertisementType];
     }
     
-     NSString* s=[[NSString alloc]initWithFormat:@"<b>%@</b><br><br>By <font color=#808080>%@</font> in<font color=#FF1493> %@ </font><br><font color=#808080><font size=2>Posted %@</font></font><br><br>%@",articleA.title,articleA.author,t,articleA.pub_date,articleA.text ];
-     [webView loadHTMLString:s baseURL:nil];
-    
-    
-    
-    
-    man=[[AdvertisementManager alloc]init];
-    
-    [man getAdvertisementType];
-    
-    
-    
+        
 }
 
 
@@ -249,4 +274,17 @@
     [self setLabel:nil];
     [super viewDidUnload];
 }
+
+
+
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return YES;
+}
+
+-(BOOL)shouldAutorotate
+{
+    return YES;
+}
+
 @end

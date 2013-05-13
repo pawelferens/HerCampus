@@ -16,7 +16,7 @@
 #import <iAd/iAd.h>
 #import "AdvertisementManager.h"
 #import "DFPBannerView.h"
-@interface ViewController : UIViewController<UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate,UINavigationControllerDelegate,ADBannerViewDelegate>
+@interface ViewController : UIViewController <UITableViewDataSource,UITableViewDelegate,UIActionSheetDelegate,MFMailComposeViewControllerDelegate,MFMessageComposeViewControllerDelegate,UINavigationControllerDelegate,ADBannerViewDelegate>
 {
     DFPBannerView *bannerView_;
      ADBannerView *adBannerView;
@@ -54,4 +54,6 @@
 @property(nonatomic, retain) UITextView *noContentLabel;
 @property bool isOfflinePreview;
 @property bool isOnline;
+
+
 @end

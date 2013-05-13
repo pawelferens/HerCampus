@@ -15,6 +15,7 @@
 @property (strong, nonatomic) UIWindow *window;
 @property(nonatomic,retain)ADBannerView*IAD;
 @property (nonatomic, assign) NSString *documentsDirectory;
+@property (nonatomic, retain) NSString *deviceType;
 
 -(bool)checkNetworkStatus;
 @end

@@ -18,6 +18,7 @@
 {
     DFPBannerView *bannerView_;
     ADBannerView *adBannerView;
+    bool isInitialized;
 }
 @property(nonatomic,retain)NSString* contentText;
 @property (strong, nonatomic) IBOutlet UIWebView *content;
