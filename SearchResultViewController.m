@@ -8,9 +8,7 @@
 
 #import "SearchResultViewController.h"
 
-@interface SearchResultViewController (){
-    CGSize detailVCSize;
-}
+@interface SearchResultViewController ()
 
 @end
 
@@ -25,6 +23,7 @@
 @synthesize advPlace;
 @synthesize label;
 @synthesize screenHeigth;
+
 - (id)initWithNibName:(NSString *)nibNameOrNil bundle:(NSBundle *)nibBundleOrNil
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
@@ -39,7 +38,6 @@
     CGRect bannerFrame = self.adBannerView.frame;
     bannerFrame.origin.y = self.view.frame.size.height;
     self.adBannerView.frame = bannerFrame;
-    
     self.adBannerView.delegate = self;
     self.adBannerView.requiredContentSizeIdentifiers = [NSSet setWithObjects:ADBannerContentSizeIdentifierPortrait, ADBannerContentSizeIdentifierLandscape, nil];
 }
@@ -54,14 +52,14 @@
     {
         bannerView_.alpha=0;
         adBannerView=[[self appdelegate]IAD];
-      
+        
         [adBannerView setFrame:CGRectMake(0, screenHeigth -50, 320, 50)];
         adBannerView.requiredContentSizeIdentifiers = [NSSet setWithObjects:ADBannerContentSizeIdentifierPortrait, ADBannerContentSizeIdentifierLandscape, nil];
         [webView setFrame:CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, self.view.frame.size.height-123)];
         [self.view addSubview:adBannerView];
         
         adBannerView.alpha=1;
-      
+        
     }
     else if([man.type isEqualToString:@"AD_MOB\n"])
     {
@@ -79,11 +77,11 @@
         [self.advPlace addSubview:bannerView_];
         [self.view addSubview:advPlace];
         
-      
+        
     }
     else if([man.type isEqualToString:@"NONE\n"])
     {
-       [webView setFrame:CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, self.view.frame.size.height-73)];
+        [webView setFrame:CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, self.view.frame.size.height-73)];
     }
     else
     {
@@ -92,7 +90,7 @@
         t.backgroundColor=[UIColor blackColor];
         t.text=man.type;
         t.textAlignment = UITextAlignmentCenter;
-       [t setFont: [UIFont boldSystemFontOfSize:21.0]];
+        [t setFont: [UIFont boldSystemFontOfSize:21.0]];
         [advPlace addSubview:t];
         [webView setFrame:CGRectMake(webView.frame.origin.x, webView.frame.origin.y, webView.frame.size.width, self.view.frame.size.height-123)];
         [self.view addSubview:advPlace];
@@ -114,7 +112,7 @@
 
 - (BOOL)bannerViewActionShouldBegin:(ADBannerView *)banner willLeaveApplication:(BOOL)willLeave
 {
-    return YES;
+    return NO;
 }
 
 - (void)bannerViewActionDidFinish:(ADBannerView *)banner
@@ -140,7 +138,7 @@
         self.adBannerView.frame = adBannerFrame;
         // self.articlesTableView.frame = contentViewFrame;
     }];
-  //  [ self.secondAdvView setFrame:CGRectMake(0, self.view.frame.origin.y, 320, self.adBannerView.frame.size.height )];
+    //  [ self.secondAdvView setFrame:CGRectMake(0, self.view.frame.origin.y, 320, self.adBannerView.frame.size.height )];
     
 }
 
@@ -148,8 +146,34 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    isInitialized = NO;
     
+    self.advPlace=[[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, 320, 50)];
+    advPlace.backgroundColor=[UIColor blackColor];
+    
+    NSString *notificationnName = @"TypeRefreshed";
+    [[NSNotificationCenter defaultCenter]
+     addObserver:self
+     selector:@selector(typeRefreshed:)
+     name:notificationnName
+     object:nil];
+    screenHeigth=self.view.frame.size.height;
+    
+	// Do any additional setup after loading the view.
+   
+    webView=[[UIWebView alloc]initWithFrame:CGRectMake(0, 80, self.view.frame.size.width, self.view.frame.size.height-80)];
+    //  [webView loadHTMLString:contentText baseURL:nil];
+    UIView* bar=[[UIView alloc]initWithFrame:CGRectMake(0, 60, 320, 20)];
+    UIButton* back=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 50, 20)];
+    [back setTitle:@"BACK" forState:UIControlStateNormal];
+    UIFont* font= [UIFont fontWithName:@"Jockey One" size:14];
+    back.titleLabel.font = font;
+    [back setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [back addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
+    [bar addSubview:back];
+    UIColor *color=[UIColor colorWithRed:184.0f/255.0f green:183.0f/255.0f blue:183.0f/255.0f alpha:1];
+    bar.backgroundColor=color;
+    [self.view addSubview:bar];
+    [self.view addSubview:webView];
 }
 
 - (void)didReceiveMemoryWarning
@@ -161,78 +185,29 @@
 {
     [self.navigationController popViewControllerAnimated:true];
 }
-
-
 -(void)viewDidAppear:(BOOL)animated
 {
-    if (!isInitialized){
-        detailVCSize = CGSizeMake(((SearchResultViewController*)[self.splitViewController.viewControllers objectAtIndex:1]).view.frame.size.width,
-                                  ((SearchResultViewController*)[self.splitViewController.viewControllers objectAtIndex:1]).view.frame.size.height);
-        NSLog(@"test: %f -  %f",
-              ((SearchResultViewController*)[self.splitViewController.viewControllers objectAtIndex:1]).view.frame.size.width,
-              ((SearchResultViewController*)[self.splitViewController.viewControllers objectAtIndex:0]).view.frame.size.width);
-        
-        NSLog(@"detailVCSize: %f x %f", detailVCSize.width, detailVCSize.height);
-        
-        
-        self.advPlace=[[UIView alloc]initWithFrame:CGRectMake(0, self.view.frame.size.height-50, detailVCSize.width, 50)];
-        advPlace.backgroundColor=[UIColor blackColor];
-        
-        NSString *notificationnName = @"TypeRefreshed";
-        [[NSNotificationCenter defaultCenter]
-         addObserver:self
-         selector:@selector(typeRefreshed:)
-         name:notificationnName
-         object:nil];
-        screenHeigth=self.view.frame.size.height;
-        
-        
-        
-        int screenHeigth=self.view.frame.size.height;
-        webView=[[UIWebView alloc]initWithFrame:CGRectMake(0, 80, detailVCSize.width, screenHeigth-80)];
-        //  [webView loadHTMLString:contentText baseURL:nil];
-        UIView* bar=[[UIView alloc]initWithFrame:CGRectMake(0, 60, detailVCSize.width, 20)];
-        
-        if([[self appdelegate].deviceType isEqualToString:@"iPhone"] || [[self appdelegate].deviceType isEqualToString:@"iPhone Simulator"]){
-            UIButton* back=[[UIButton alloc]initWithFrame:CGRectMake(0, 0, 50, 20)];
-            [back setTitle:@"BACK" forState:UIControlStateNormal];
-            UIFont* font= [UIFont fontWithName:@"Jockey One" size:14];
-            back.titleLabel.font = font;
-            [back setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-            [back addTarget:self action:@selector(back:) forControlEvents:UIControlEventTouchUpInside];
-            [bar addSubview:back];
-        }
-        
-        
-        UIColor *color=[UIColor colorWithRed:184.0f/255.0f green:183.0f/255.0f blue:183.0f/255.0f alpha:1];
-        bar.backgroundColor=color;
-        [self.view addSubview:bar];
-        [self.view addSubview:webView];
-        isInitialized = YES;
+    NSString*t;
+    if ([articleA.sections count]>0) {
+        t=[self getSectionNameWithId:[articleA.sections objectAtIndex:0] ];
     }
-
-    if(articleA != nil){
-        NSString*t;
-        if ([articleA.sections count]>0) {
-            t=[self getSectionNameWithId:[articleA.sections objectAtIndex:0] ];
-        }
-        else
-        {
-            t=@"";
-        }
-        
-         NSString* s=[[NSString alloc]initWithFormat:@"<b>%@</b><br><br>By <font color=#808080>%@</font> in<font color=#FF1493> %@ </font><br><font color=#808080><font size=2>Posted %@</font></font><br><br>%@",articleA.title,articleA.author,t,articleA.pub_date,articleA.text ];
-         [webView loadHTMLString:s baseURL:nil];
-        
-        
-        
-        
-        man=[[AdvertisementManager alloc]init];
-        
-        [man getAdvertisementType];
+    else
+    {
+        t=@"";
     }
     
-        
+    NSString* s=[[NSString alloc]initWithFormat:@"<b>%@</b><br><br>By <font color=#808080>%@</font> in<font color=#FF1493> %@ </font><br><font color=#808080><font size=2>Posted %@</font></font><br><br>%@",articleA.title,articleA.author,t,articleA.pub_date,articleA.text ];
+    [webView loadHTMLString:s baseURL:nil];
+    
+    
+    
+    
+    man=[[AdvertisementManager alloc]init];
+    
+    [man getAdvertisementType];
+    
+    
+    
 }
 
 
@@ -274,17 +249,4 @@
     [self setLabel:nil];
     [super viewDidUnload];
 }
-
-
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
-
--(BOOL)shouldAutorotate
-{
-    return YES;
-}
-
 @end

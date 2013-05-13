@@ -44,6 +44,8 @@
 @synthesize noContentLabel;
 @synthesize isOfflinePreview;
 @synthesize isOnline;
+@synthesize logo;
+@synthesize searchButton;
 - (void)viewDidLoad
 {
     
@@ -152,7 +154,7 @@
     
 
 
-    UIImageView*logo=[[UIImageView alloc]initWithFrame:CGRectMake(naviBarFrame.origin.x,
+    logo=[[UIImageView alloc]initWithFrame:CGRectMake(naviBarFrame.origin.x,
                                                                   naviBarFrame.origin.y,
                                                                   screenWidth,
                                                                   20)];
@@ -206,6 +208,12 @@
     }
     [self loadNewestArticles];
     [self.view bringSubviewToFront:articlesTableView];
+    
+    [logo setFrame:CGRectMake(naviBarFrame.origin.x,
+                              naviBarFrame.origin.y,
+                              self.view.frame.size.width,
+                              20)];
+   
 }
 
 
@@ -233,7 +241,17 @@
     
 	[self dismissModalViewControllerAnimated:YES];
 }
-
+-(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+    [sectionsView setFrame:CGRectMake(sectionsView.frame.origin.x, sectionsView.frame.origin.y, self.view.frame.size.width-32, 40)];
+    [logo setFrame:CGRectMake(naviBarFrame.origin.x,
+                              naviBarFrame.origin.y,
+                              self.view.frame.size.width,
+                              20)];
+    [searchButton setFrame:CGRectMake(self.view.frame.size.width-20, naviBarFrame.origin.y+3, 14, 15)];
+    
+    
+}
 - (void)mailComposeController:(MFMailComposeViewController*)controller didFinishWithResult:(MFMailComposeResult)result error:(NSError*)error
 {
     switch (result)
@@ -259,7 +277,7 @@
 }
 -(void)addSearchButton
 {
-    UIButton*searchButton=[[UIButton alloc]initWithFrame:CGRectMake(screenWidth-20, naviBarFrame.origin.y+3, 14, 15)];
+    searchButton=[[UIButton alloc]initWithFrame:CGRectMake(self.view.frame.size.width-20, naviBarFrame.origin.y+3, 14, 15)];
     [searchButton setImage:[UIImage imageNamed:@"searchIcon"] forState:UIControlStateNormal];
     [searchButton addTarget:self action:@selector(goToSearchPage:) forControlEvents:UIControlEventTouchUpInside];
    
@@ -567,8 +585,7 @@
     for(int i=0;i<[articles count];i++)
     {
         
-      UIWebView* webview=[[UIWebView alloc]initWithFrame:CGRectMake(i*screenWidth, 0, screenWidth, contentController.contentScrollView.frame.size.height)];
-      [webview loadHTMLString:[[articles objectAtIndex:i] text]baseURL:nil];
+     
       [contentController.articles addObject:[articles objectAtIndex:i]];
     }
     if ([selectedSectionName isEqualToString:@"ALL"]) {
@@ -937,6 +954,9 @@
     b=[selector self];
     self.selectedSectionName=[b.titleLabel.text uppercaseString];
     
+    NSString *deviceType = [UIDevice currentDevice].model;
+    
+    if([deviceType isEqualToString:@"iPhone"] || [deviceType isEqualToString:@"iPhone Simulator"])
     [sectionsView setContentOffset:CGPointMake(b.frame.origin.x-115, 0) animated:TRUE];
     
     if([[self appdelegate]checkNetworkStatus] || isOfflinePreview){

@@ -54,6 +54,6 @@
 @property(nonatomic, retain) UITextView *noContentLabel;
 @property bool isOfflinePreview;
 @property bool isOnline;
-
-
+@property UIImageView*logo;
+@property UIButton*searchButton;
 @end

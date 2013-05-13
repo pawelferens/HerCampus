@@ -29,35 +29,12 @@
     }
     return self;
 }
-
--(void)viewDidLoad{
-    //cont=[[SearchResultViewController alloc]init];
-    
-    cont=[self.storyboard instantiateViewControllerWithIdentifier:@"searchResultWindow"];
-    
-    if([[self appdelegate].deviceType isEqualToString:@"iPhone"] || [[self appdelegate].deviceType isEqualToString:@"iPhone Simulator"]){
-      //  screenWidth=self.view.frame.size.width;
-    }
-    else if([[self appdelegate].deviceType isEqualToString:@"iPad"] || [[self appdelegate].deviceType isEqualToString:@"iPad Simulator"]){
-       // screenWidth=self.view.frame.size.height;
-        [self addChildViewController:cont];
-        [cont.view setFrame:CGRectMake(myTableView.frame.size.width, 60, 768, 704)];
-        [self.view addSubview:cont.view];
-        
-    }
-}
-
--(void) viewWillAppear:(BOOL)animated{
-    NSArray *newVCs = [NSArray arrayWithObjects:[self.splitViewController.viewControllers objectAtIndex:0], cont, nil];
-    self.splitViewController.viewControllers = newVCs;
-}
-
 -(void)searchCompleted:(id)notification
 {
     founded=0;
     foundedInContent=0;
     self.dataSource=man.foundArticles;
-      [spinner stopAnimating];
+    [spinner stopAnimating];
     spinner.hidden=true;
     NSLog(@"%@",searchedText);
     for(int i=0;i<[dataSource count];i++)
@@ -105,9 +82,20 @@
     NSLog(@"%d|| %d",founded,foundedInContent);
     [myTableView reloadData];
 }
+-(void) didRotateFromInterfaceOrientation:(UIInterfaceOrientation)fromInterfaceOrientation
+{
+   
+    sBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0,60,self.view.frame.size.width,30)];
+    myTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 94, self.view.frame.size.width, self.view.frame.size.height-95)];
+    NSLog(@"rot %f",self.view.frame.size.width);
+}
+- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
+{
+    return NO;
+}
 - (void)loadView {
     
-   
+    
     
     
     NSString *notificationnName = @"searchCompleted";
@@ -117,21 +105,21 @@
      name:notificationnName
      object:nil];
     
-  //  self.view.backgroundColor=[UIColor blackColor];
+    //  self.view.backgroundColor=[UIColor blackColor];
     searchedText=[[NSString alloc]init];
     [super loadView];
     founded=0;
     foundedInContent=0;
-    sBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0,60,320,30)];
+    sBar = [[UISearchBar alloc]initWithFrame:CGRectMake(0,60,self.view.frame.size.width,30)];
     UIImage *blackBack=[UIImage imageNamed:@"bar2.png"  ];
     sBar.backgroundImage=blackBack;
     sBar.delegate = self;
     sBar.barStyle  = UIBarStyleBlack;
-   // sBar.showsCancelButton = YES;
+    // sBar.showsCancelButton = YES;
     
     [self.view addSubview:sBar];
     int screenHeigth=self.view.frame.size.height;
-    myTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 94, 320, screenHeigth-95)];   //stare 91
+    myTableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 94, self.view.frame.size.width, screenHeigth-95)];   //stare 91
     myTableView.delegate = self;
     myTableView.dataSource = self;
     [self.view addSubview:myTableView];
@@ -139,7 +127,6 @@
     //initialize the two arrays; dataSource will be initialized and populated by appDelegate
     searchedData = [[NSMutableArray alloc]init];
     tableData = [[NSMutableArray alloc]init];
-
     [tableData addObjectsFromArray:dataSource];//on launch it should display all the records
 }
 
@@ -179,7 +166,7 @@
     }
     else
     {
-         return [tableData count];
+        return [tableData count];
     }
     
     
@@ -197,7 +184,7 @@
     Article*temp;
     if(founded==0 && foundedInContent==0)
     {
-       temp=[tableData objectAtIndex:indexPath.row];
+        temp=[tableData objectAtIndex:indexPath.row];
     }
     else if(founded!=0 &&foundedInContent!=0 )
     {
@@ -217,17 +204,17 @@
         temp=[tableData objectAtIndex:indexPath.row];
     }
     
-
     
     
-   //cell.text = temp.title;
+    
+    //cell.text = temp.title;
     //UIImageView*th=cell.imageView;
     UIImageView*th=[[UIImageView alloc]initWithFrame:CGRectMake(2, 2, 45, 40)];
-   //
+    //
     [th setImage:[UIImage imageNamed:@"gradient_border.png"]];
     [th setImageWithURL:[NSURL URLWithString:temp.primaryArticleImage]
-              placeholderImage:[UIImage imageNamed:@"gradient_border.png"]];
-   // th.contentMode = UIViewContentModeScaleAspectFit;
+       placeholderImage:[UIImage imageNamed:@"gradient_border.png"]];
+    // th.contentMode = UIViewContentModeScaleAspectFit;
     [cell addSubview:th];
     
     UIFont* font2= [UIFont fontWithName:@"OpenSans-Bold" size:10];
@@ -243,18 +230,18 @@
 {
     // only show the status bar's cancel button while in edit mode
     
-//    NSDictionary *attributes =
-//    [NSDictionary dictionaryWithObjectsAndKeys:
-//     [UIColor whiteColor], UITextAttributeTextColor,
-//     [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5], UITextAttributeTextShadowColor,
-//     [NSValue valueWithUIOffset:UIOffsetMake(0, 1)], UITextAttributeTextShadowOffset,
-//     [UIFont systemFontOfSize:12], UITextAttributeFont,
-//    
-//     nil];
-//    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil]
-//     setTitleTextAttributes:attributes forState:UIControlStateNormal];
-//    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil]
-//     setTitleTextAttributes:attributes forState:UIControlStateHighlighted];
+    //    NSDictionary *attributes =
+    //    [NSDictionary dictionaryWithObjectsAndKeys:
+    //     [UIColor whiteColor], UITextAttributeTextColor,
+    //     [UIColor colorWithRed:0 green:0 blue:0 alpha:0.5], UITextAttributeTextShadowColor,
+    //     [NSValue valueWithUIOffset:UIOffsetMake(0, 1)], UITextAttributeTextShadowOffset,
+    //     [UIFont systemFontOfSize:12], UITextAttributeFont,
+    //
+    //     nil];
+    //    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil]
+    //     setTitleTextAttributes:attributes forState:UIControlStateNormal];
+    //    [[UIBarButtonItem appearanceWhenContainedIn:[UISearchBar class], nil]
+    //     setTitleTextAttributes:attributes forState:UIControlStateHighlighted];
     
     founded=0;
     foundedInContent=0;
@@ -266,7 +253,7 @@
         {
             UIButton *searchTextField = (UIButton *)view;
             [searchTextField setFrame:CGRectMake(searchTextField.frame.origin.x, searchTextField.frame.origin.y, searchTextField.frame.size.width, searchTextField.frame.size.height-30)];
-                    }
+        }
     }
     sBar.autocorrectionType = UITextAutocorrectionTypeNo;
     // flush the previous search content
@@ -278,48 +265,36 @@
 {
     founded=0;
     foundedInContent=0;
-   
+    
 }
 - (void)searchBar:(UISearchBar *)searchBar textDidChange:(NSString *)searchText
 {
     self.searchedText=searchText;
+    
+    
+    
 }
-
-
-- (AppDelegate *) appdelegate {
-    return (AppDelegate *)[[UIApplication sharedApplication] delegate];
-}
-
-
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-   
-   // cont=[self.storyboard instantiateViewControllerWithIdentifier:@"searchResultWindow"];
+    cont=[[SearchResultViewController alloc]init];
+    // cont=[self.storyboard instantiateViewControllerWithIdentifier:@"searchResultWindow"];
     Article*t;
     if(indexPath.section==0)
     {
-    t=[tableData objectAtIndex:indexPath.row];
+        t=[tableData objectAtIndex:indexPath.row];
     }
     else
     {
-       t=[tableData objectAtIndex:indexPath.row+founded];
+        t=[tableData objectAtIndex:indexPath.row+founded];
     }
-
+    
     
     cont.contentText=t.text;
     cont.articleA=t;
     
-    if([[self appdelegate].deviceType isEqualToString:@"iPhone"] || [[self appdelegate].deviceType isEqualToString:@"iPhone Simulator"]){
-        [self.navigationController pushViewController:cont animated:TRUE];
-    }
-    else if([[self appdelegate].deviceType isEqualToString:@"iPad"] || [[self appdelegate].deviceType isEqualToString:@"iPad Simulator"]){
-        [cont viewDidAppear:YES];
-    }
+    [self.navigationController pushViewController:cont animated:TRUE];
     
-    
-    
-   
 }
 - (void)searchBarCancelButtonClicked:(UISearchBar *)searchBar
 {
@@ -340,11 +315,11 @@
     sBar.showsCancelButton=false;
     
     
-   
     
     
     
-  //  [self dismissModalViewControllerAnimated:YES];
+    
+    //  [self dismissModalViewControllerAnimated:YES];
 }
 
 // called when Search (in our case "Done") button pressed
@@ -390,8 +365,8 @@
     
     
     
-   
-     UIFont* font2= [UIFont fontWithName:@"Jockey One" size:14];
+    
+    UIFont* font2= [UIFont fontWithName:@"Jockey One" size:14];
 	headerLabel.font = font2;
 	headerLabel.frame = CGRectMake(6.0, 0.0, 320.0, 20.0);
     
@@ -400,14 +375,14 @@
     NSString * sectionName;
     if(founded==0 && foundedInContent==0)
     {
-         sectionName=@"SEARCH RESULTS";
+        sectionName=@"SEARCH RESULTS";
     }
     else if(founded!=0 &&foundedInContent!=0 )
     {
-       if(section==0)
-       {
+        if(section==0)
+        {
             sectionName=@"SEARCH IN TITLE RESULTS";
-       }
+        }
         else
         {
             sectionName=@"SEARCH IN CONTENT RESULTS";
@@ -415,35 +390,24 @@
     }
     else if(founded==0 &&foundedInContent!=0 )
     {
-         sectionName=@"SEARCH IN CONTENT RESULTS";
+        sectionName=@"SEARCH IN CONTENT RESULTS";
     }
     else if(founded!=0 &&foundedInContent==0 )
     {
-         sectionName=@"SEARCH RESULTS";
+        sectionName=@"SEARCH RESULTS";
     }
     else
     {
-       sectionName=@"SEARCH RESULTS";
+        sectionName=@"SEARCH RESULTS";
     }
     
-  
+    
     
     headerLabel.text =sectionName; // i.e. array element
     [customView addSubview:headerLabel];
     
     
 	return customView;
-}
-
-
-- (BOOL)shouldAutorotateToInterfaceOrientation:(UIInterfaceOrientation)interfaceOrientation
-{
-    return YES;
-}
-
--(BOOL)shouldAutorotate
-{
-    return YES;
 }
 
 
